@@ -27,7 +27,15 @@ module Doorkeeper
             resource_owner_id: resource_owner.id).delete_all
     end
     private_class_method :delete_all_for
-
+    
+    def self.last_authorized_token_for(application_id, resource_owner_id)
+      send(order_method, created_at_desc).
+        where(application_id: application_id,
+              resource_owner_id: resource_owner_id,
+              revoked_at: nil).first
+    end
+    private_class_method :last_authorized_token_for
+    
     def self.order_method
       :order_by
     end
